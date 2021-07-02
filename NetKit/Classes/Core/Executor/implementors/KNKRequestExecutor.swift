@@ -71,6 +71,11 @@ class RequestTask: NSObject {
             }
         }
         
+        // Add custom timeoutInterval if configured.
+        if let timeout = request.timeout {
+            urlRequest.timeoutInterval = timeout
+        }
+        
         // We will use the request's requestConfiguration if it was configured,
         // otherwise we will use the executor's requestConfiguration.
         if let requestConfiguration = request.configuration {

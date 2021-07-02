@@ -31,7 +31,7 @@ public protocol Request {
     var url: URL { get }
     var dataBody: Data? { get }
     var headers: [String:String]? { get }
-    var timeout: Double { get }
+    var timeout: Double? { get }
     var configuration: RequestConfiguration? { get }
     var completion: completionClosures? { get }
     var responseSerializer: ResponseSerializer { get }
@@ -44,7 +44,7 @@ public struct RequestElement: Request {
     public var url: URL
     public var dataBody: Data?
     public var headers: [String:String]?
-    public var timeout: Double
+    public var timeout: Double?
     public var configuration: RequestConfiguration?
     public var responseSerializer: ResponseSerializer
     public var completion: completionClosures?
@@ -60,7 +60,7 @@ public struct RequestElement: Request {
     public var url: URL
     public var jsonBody: JSON? = nil
     public var headers: [String:String]? = nil
-    public var timeout: Double = 3
+    public var timeout: Double?
     public var configuration: RequestConfiguration? = nil
     public var completion: completionClosures? = nil
     public var urlParams: [String: String]? = nil
@@ -152,6 +152,12 @@ public struct RequestElement: Request {
         return self
     }
     
+    @discardableResult
+    public func set(timeout: Double) -> Self {
+        self.timeout = timeout
+        return self
+    }
+    
     public func build() -> Request {
     
         var bodyData: Data? = nil
@@ -183,7 +189,15 @@ public struct RequestElement: Request {
             
         }
         
-        return RequestElement(requestId: self.requestId, method:self.method , url: self.url, dataBody: bodyData, headers: self.headers, timeout: self.timeout, configuration: self.configuration,responseSerializer: self.responseSerializer, completion: self.completion)
+        return RequestElement(requestId: self.requestId,
+                              method:self.method,
+                              url: self.url,
+                              dataBody: bodyData,
+                              headers: self.headers,
+                              timeout: self.timeout,
+                              configuration: self.configuration,
+                              responseSerializer: self.responseSerializer,
+                              completion: self.completion)
     }
 }
 
